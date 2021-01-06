@@ -7,7 +7,9 @@ Date Modified   :11-04-2019
 version         :1.7
 python_version  :2.7.11
 '''
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 class MicroExpNet():
 	def __init__(self, x, y=None, teacherLogits=None, lr=1e-04, nClasses=8, imgXdim=84, imgYdim=84, batchSize=64, keepProb=1.0, temperature=8, lambda_=0.5):
@@ -53,13 +55,14 @@ class MicroExpNet():
 	def initParameters(self):
 		self.w = {
 		# 8x8 conv, 1 input channel, 16 outputs
-		'wc1': tf.get_variable('wc1', [8, 8, 1, 16], initializer=tf.contrib.layers.xavier_initializer_conv2d()),
+		#'wc1': tf.get_variable('wc1', [8, 8, 1, 16], initializer=tf.contrib.layers.xavier_initializer_conv2d()),
+		'wc1': tf.get_variable('wc1', [8, 8, 1, 16], initializer=tf.truncated_normal_initializer()),
 		# 4x4 conv, 16 inputs, 32 outputs
-		'wc2': tf.get_variable('wc2', [4, 4, 16, 32], initializer=tf.contrib.layers.xavier_initializer_conv2d()),
+		'wc2': tf.get_variable('wc2', [4, 4, 16, 32], initializer=tf.truncated_normal_initializer()),
 		# fully connected, 1152 inputs, 48 outputs
-		'wfc': tf.get_variable('wfc', [32*6*6, self.fcOutSize], initializer=tf.contrib.layers.xavier_initializer()),
+		'wfc': tf.get_variable('wfc', [32*6*6, self.fcOutSize], initializer=tf.truncated_normal_initializer()),
 		# 48 inputs, 8 outputs (class prediction)
-		'out': tf.get_variable('wo', [self.fcOutSize, self.nClasses], initializer=tf.contrib.layers.xavier_initializer())
+		'out': tf.get_variable('wo', [self.fcOutSize, self.nClasses], initializer=tf.truncated_normal_initializer())
 		}
 		self.b = {
 			'bc1': tf.Variable(tf.random_normal(shape=[16], stddev=0.5), name="bc1"),

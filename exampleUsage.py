@@ -7,10 +7,11 @@ Date Modified   :20171210
 version         :1.0
 python_version  :2.7.11
 '''
-from __future__ import print_function
+#from __future__ import print_function
 from time import gmtime, strftime 
 from MicroExpNet import *
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import numpy as np
 import cv2
 import sys
@@ -19,8 +20,13 @@ import os
 labels = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
 
 # Import the xml files of frontal face and eye
-face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_eye.xml') 
+
+#face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_default.xml')
+#eye_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_eye.xml') 
+
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_eye.xml")
+
 
 def detectFaces(img):
 	# Convertinto grayscale since it works with grayscale images
